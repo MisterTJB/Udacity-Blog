@@ -15,11 +15,15 @@
 # limitations under the License.
 #
 import webapp2
+import model
 
-class MainHandler(webapp2.RequestHandler):
+class PostsHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.write('Hello world!')
+        pass
+
+    def post(self):
+        pass
 
 app = webapp2.WSGIApplication([
-    ('/', MainHandler)
+    ('/', PostsHandler)
 ], debug=True)
