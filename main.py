@@ -15,15 +15,34 @@
 # limitations under the License.
 #
 import webapp2
-import model
+import os
+import datetime
+from model.post import Post
+from jinja2 import Environment, FileSystemLoader
 
-class PostsHandler(webapp2.RequestHandler):
+template_dir = os.path.join(os.path.dirname(__file__), 'template')
+jinja_env = Environment(loader = FileSystemLoader(template_dir), autoescape=True)
+
+
+def minutes_since_post_created(creation_timestamp):
+    seconds_passed = (datetime.datetime.utcnow() - creation_timestamp).seconds
+    if (seconds_passed / 86400) > 1:
+        return "%d days ago" % (seconds_passed / 86400)
+    elif (seconds_passed / 3600) > 1:
+        return "%d hours ago" % (seconds_passed / 3600)
+    elif (seconds_passed / 60) > 1:
+        return "%d minutes ago" % (seconds_passed / 60)
+    else:
+        return "moments ago"
+jinja_env.filters['post_age'] = minutes_since_post_created
+
+
+class FrontPageHandler(webapp2.RequestHandler):
+    template = jinja_env.get_template('posts.html')
+
     def get(self):
-        pass
-
-    def post(self):
-        pass
+        self.response.out.write(self.template.render(posts=Post().query()))
 
 app = webapp2.WSGIApplication([
-    ('/', PostsHandler)
+    ('/', FrontPageHandler)
 ], debug=True)
