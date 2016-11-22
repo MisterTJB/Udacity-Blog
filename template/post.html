@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="post-title">{{post.title}}</h1>
+<h2 class="post-submitter">{{post.submitter}}</h2>
+<h3 class="post-submission-timestamp">{{post.submitted | post_age}}</h3>
+<p class="post-content">{{post.content}}</p>
+{% endblock %}

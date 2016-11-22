@@ -2,11 +2,10 @@
 
 {% block content %}
 {% for post in posts %}
-{{post}}
 <div class="post" id="{{post.key.id()}}">
     <h2 class="votes">{{post.votes}}</h2>
     <h2 class="title-header"><a class="title-anchor" href="/posts/{{post.key.id()}}">{{ post.title }}</a></h2>
-    <h3 class="submission-info">Submitted by {{ post.submitter }} {{post.submitted | post_age}}</h3>
+    <h3 class="submission-info">Submitted by {{ post.submitter }} on {{post.submitted | post_age}}</h3>
     <p class="content">{{ post.content }}</p>
 </div>
 
