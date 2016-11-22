@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block head %}
+    <title>Udacity Blog</title>
+    {% endblock %}
+</head>
+<body>
+<div class="navigation">
+    <a href="/">Home</a>
+    <a href="/posts/new">New Post</a>
+    <a href="/users/new">Sign Up</a>
+</div>
+
+<div class="content">
+    {% block content %}
+    {% endblock %}
+</div>
+</body>
+</html>
