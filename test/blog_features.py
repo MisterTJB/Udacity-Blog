@@ -4,7 +4,7 @@ from google.appengine.ext import testbed
 from main import app
 from model.post import Post
 
-class TestBasicBlogFeature(unittest.TestCase):
+class TestBasicBlogFeatures(unittest.TestCase):
     def setUp(self):
         self.testapp = webtest.TestApp(app)
         self.testbed = testbed.Testbed()
