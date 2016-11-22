@@ -48,7 +48,7 @@ class BlogFeaturesTest(unittest.TestCase):
         self.assertEqual(post_title, "Test")
         self.assertEqual(post_href, "/posts/%d" % test_post_id)
         self.assertEqual(post_submission_info, "Submitted by Me moments ago")
-        self.assertTrue("Some content")
+        self.assertTrue(post_content, "Some content")
 
 
 
