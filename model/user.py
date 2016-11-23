@@ -18,4 +18,3 @@ class PasswordProperty(db.StringProperty):
 class User(db.Model):
   username = db.StringProperty()
   password = PasswordProperty()
-  email = db.StringProperty()
