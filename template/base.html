@@ -1,21 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="public/css/foundation.css">
+    <link rel="stylesheet" href="public/css/app.css">
     {% block head %}
     <title>Udacity Blog</title>
     {% endblock %}
 </head>
 <body>
-<div class="navigation">
-    <a href="/">Home</a>
-    <a href="/posts/new">New Post</a>
-    <a href="/users/new">Sign Up</a>
-</div>
+<ul class="menu">
+  <li><a href="/">Home</a></li>
+  <li><a href="/posts/new">New Post</a></li>
+  <li><a href="/users">Sign Up</a></li>
+</ul>
 
 <div class="content">
     {% block content %}
     {% endblock %}
 </div>
+<script src="public/js/vendor/jquery.js"></script>
+<script src="public/js/vendor/what-input.js"></script>
+<script src="public/js/vendor/foundation.js"></script>
+<script src="public/js/app.js"></script>
 </body>
 </html>
