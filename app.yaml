@@ -12,7 +12,7 @@ handlers:
   static_dir: public/css
 - url: /public/js
   static_dir: public/js
-- url: .*/
+- url: .*/*
   script: main.app
 
 libraries:

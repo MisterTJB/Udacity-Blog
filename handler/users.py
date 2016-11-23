@@ -10,13 +10,18 @@ class SignUpHandler(webapp2.RequestHandler):
 
     # Handler for the form
     def get(self):
-        self.response.write('Will render sign in form')
+        template = jinja_env.get_template('register.html')
+        self.response.write(template.render())
 
     # Handler for form submission
     def post(self):
         self.response.write('Will process signin form')
 
 class SignInHandler(webapp2.RequestHandler):
+
+    def get(self):
+        template = jinja_env.get_template('sign-in.html')
+        self.response.write(template.render())
 
     def post(self):
         self.response.write('Will sign in user')

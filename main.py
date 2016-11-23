@@ -23,8 +23,8 @@ app = webapp2.WSGIApplication([
     ('/posts', posts.PostsHandler),
     ('/posts/(\d+)', posts.PostHandler),
 
-    ('/users', users.SignUpHandler),
-    ('/users/(.+)', users.SignInHandler),
-    ('/users/signout', users.SignOutHandler)
+    ('/users/new', users.SignUpHandler),
+    ('/users/in', users.SignInHandler),
+    ('/users/out', users.SignOutHandler)
 
 ], debug=True)
