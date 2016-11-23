@@ -8,8 +8,11 @@ handlers:
 - url: /favicon\.ico
   static_files: favicon.ico
   upload: favicon\.ico
-
-- url: .*
+- url: /public/css
+  static_dir: public/css
+- url: /public/js
+  static_dir: public/js
+- url: .*/
   script: main.app
 
 libraries:
