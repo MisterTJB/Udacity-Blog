@@ -15,12 +15,16 @@
 # limitations under the License.
 #
 import webapp2
-from handler import posts
-
+from handler import posts, users
 
 app = webapp2.WSGIApplication([
     ('/', posts.FrontPageHandler),
-    ('/posts/new', posts.NewPostFormHandler),
+    ('/posts/new', posts.NewPostFormHandler), # TODO merge in to PostsHandler as GET on /posts
     ('/posts', posts.PostsHandler),
-    ('/posts/(\d+)', posts.PostHandler)
+    ('/posts/(\d+)', posts.PostHandler),
+
+    ('/users', users.SignUpHandler),
+    ('/users/(.+)', users.SignInHandler),
+    ('/users/signout', users.SignOutHandler)
+
 ], debug=True)
