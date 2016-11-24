@@ -73,3 +73,28 @@ class TestUserFeatures(unittest.TestCase):
         form_response = form.submit()
         username_error_elements = form_response.html.select('.username-error')
         self.assertTrue(len(username_error_elements) > 0)
+
+    def testUserCanSignInWithCorrectCredentials(self):
+        sign_in_response = self.testapp.request("/users/in")
+        form = sign_in_response.form
+        form['username'] = "Test"
+        form['password'] = "test_password"
+        _ = form.submit()
+        user_cookie = self.testapp.cookies.get('user')
+        self.assertIsNotNone(user_cookie)
+
+    def testUserCannotSignInWithIncorrectCredentials(self):
+        sign_in_response = self.testapp.request("/users/in")
+        form = sign_in_response.form
+        form['username'] = "Test"
+        form['password'] = "test_password_wrong"
+        form_response = form.submit()
+        invalid_login_message = form_response.html.select('.invalid-login')
+        self.assertTrue(len(invalid_login_message) == 1)
+        self.assertEqual(form_response.form['username'] == "Test")
+
+    def testUserCanSignOut(self):
+        self.testapp.cookies['user'] = 'test'
+        _ = self.testapp.request("/users/out")
+        user_cookie = self.testapp.cookies.get('user')
+        self.assertIsNone(user_cookie)
