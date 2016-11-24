@@ -28,9 +28,9 @@ class TestUserFeatures(unittest.TestCase):
 
     def testUserPasswordIsHashed(self):
         from hashlib import sha512
-        from model.user import PasswordProperty
+        from model.user import salt
         user = User().get_by_id("Test")
-        self.assertEqual(user.password, sha512("test_password" + PasswordProperty.salt).hexdigest())
+        self.assertEqual(user.password, sha512("test_password" + salt).hexdigest())
 
     def testUserCanCreateAccountWithValidCredentials(self):
         _ = self.signUpNewUserWithUsername("User_02")
@@ -91,10 +91,12 @@ class TestUserFeatures(unittest.TestCase):
         form_response = form.submit()
         invalid_login_message = form_response.html.select('.invalid-login')
         self.assertTrue(len(invalid_login_message) == 1)
-        self.assertEqual(form_response.form['username'] == "Test")
+        self.assertEqual(form_response.form['username'].value, "Test")
 
     def testUserCanSignOut(self):
         self.testapp.cookies['user'] = 'test'
-        _ = self.testapp.request("/users/out")
+        redirect = self.testapp.request("/users/out")
         user_cookie = self.testapp.cookies.get('user')
         self.assertIsNone(user_cookie)
+        redirect_response = redirect.follow()
+        self.assertEqual(redirect_response.request.path, '/users/in')

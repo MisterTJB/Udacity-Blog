@@ -53,9 +53,26 @@ class SignInHandler(webapp2.RequestHandler):
         self.response.write(template.render())
 
     def post(self):
-        self.response.write('Will sign in user')
+        username = self.request.POST['username']
+        password = self.request.POST['password']
+
+        def check_password():
+            from hashlib import sha512
+            from model.user import salt
+            user_data = User().get_by_id(username)
+            if user_data:
+                return user_data.password == sha512(password + salt).hexdigest()
+            return False
+
+        if check_password():
+            self.response.set_cookie('user', value=auth.create_user_cookie(username))
+            self.redirect('/users/welcome')
+        else:
+            template = jinja_env.get_template('sign-in.html')
+            self.response.write(template.render(invalid_credentials=True, username=username))
 
 class SignOutHandler(webapp2.RequestHandler):
 
     def get(self):
-        self.response.write('Will sign user out')
+        self.response.delete_cookie('user')
+        self.redirect('/users/in')
