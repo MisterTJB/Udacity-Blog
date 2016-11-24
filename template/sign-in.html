@@ -1,5 +1,33 @@
 {% extends "base.html" %}
 
 {% block content %}
-Sign in
+<div class="row">
+    <div class="medium-6 columns medium-centered">
+        <div class="signup-panel">
+            <p class="welcome">Welcome Back</p>
+            <form action="/users/in" method="POST">
+                <div class="row collapse">
+                    <div class="small-10  columns small-centered">
+                        {% if invalid_credentials %}
+                            <input type="text" placeholder="Username" name="username" value="{{username}}">
+                        { % else %}
+                            <input type="text" placeholder="Username" name="username">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row collapse">
+                    <div class="small-10  columns small-centered">
+                        <input type="password" placeholder="Password" name="password">
+                    </div>
+                </div>
+                <div class="row collapse">
+                    <input type="submit" value="Sign In">
+                </div>
+            </form>
+            {% if invalid_credentials %}
+            <p class="text-centered invalid-login">Your password is so cryptic you might have typed it wrong; try again, genius</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}
