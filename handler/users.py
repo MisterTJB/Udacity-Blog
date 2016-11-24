@@ -24,7 +24,7 @@ class SignUpHandler(webapp2.RequestHandler):
         if username == '':
             self.response.write(template.render(username_blank=True))
         elif User.get_by_id(username):
-            self.response.write(template.render(username_taken=True))
+            self.response.write(template.render(username_taken=True, username=username))
         elif password == '':
             self.response.write(template.render(password_blank=True, username=username))
         else:

@@ -13,7 +13,7 @@
                             <p class="text-right username-error" style="margin: 0 0;">I need a name, otherwise I won't know what to call you!</p>
                         {% elif username_taken %}
                             <input style="border-color: red; margin-bottom: 0" type="text" placeholder="Username" name="username">
-                            <p class="text-right username-error" style="margin: 0 0;">Sigh. {{username}} is already taken. Great minds, right?</p>
+                            <p class="text-right username-error" style="margin: 0 0;">Sigh. <em>{{username}}</em> is already taken. Great minds, right?</p>
                         {% else %}
                             <input type="text" style="margin-bottom: 0" placeholder="Username" name="username" value="{{username}}">
                         {% endif %}
