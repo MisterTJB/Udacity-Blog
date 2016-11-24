@@ -16,5 +16,4 @@ class PasswordProperty(db.StringProperty):
         return value
 
 class User(db.Model):
-  username = db.StringProperty()
   password = PasswordProperty()

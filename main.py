@@ -25,6 +25,7 @@ app = webapp2.WSGIApplication([
 
     ('/users/new', users.SignUpHandler),
     ('/users/in', users.SignInHandler),
-    ('/users/out', users.SignOutHandler)
+    ('/users/out', users.SignOutHandler),
+    ('/users/welcome', users.WelcomeHandler)
 
 ], debug=True)

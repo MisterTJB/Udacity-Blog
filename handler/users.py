@@ -15,7 +15,34 @@ class SignUpHandler(webapp2.RequestHandler):
 
     # Handler for form submission
     def post(self):
-        self.response.write('Will process signin form')
+
+        username = self.request.POST['username']
+        password = self.request.POST['password']
+
+        template = jinja_env.get_template('register.html')
+        if username == '':
+            self.response.write(template.render(username_blank=True))
+        elif User.get_by_id(username):
+            self.response.write(template.render(username_taken=True))
+        elif password == '':
+            self.response.write(template.render(password_blank=True, username=username))
+        else:
+            User(id=username, password=str(password)).put()
+            self.response.set_cookie('user', value=username)
+            self.redirect('/users/welcome')
+
+class WelcomeHandler(webapp2.RequestHandler):
+
+    def get(self):
+
+        template = jinja_env.get_template('welcome.html')
+        user = self.request.cookies.get('user')
+
+        if user:
+            self.response.write(template.render(username=user))
+        else:
+            self.redirect('/users/new')
+
 
 class SignInHandler(webapp2.RequestHandler):
 
