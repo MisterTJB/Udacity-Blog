@@ -1,5 +1,6 @@
 import webapp2
 import os
+import util.auth as auth
 from model.user import User
 from jinja2 import Environment, FileSystemLoader
 
@@ -28,7 +29,7 @@ class SignUpHandler(webapp2.RequestHandler):
             self.response.write(template.render(password_blank=True, username=username))
         else:
             User(id=username, password=str(password)).put()
-            self.response.set_cookie('user', value=username)
+            self.response.set_cookie('user', value=auth.create_user_cookie(username))
             self.redirect('/users/welcome')
 
 class WelcomeHandler(webapp2.RequestHandler):
@@ -36,9 +37,10 @@ class WelcomeHandler(webapp2.RequestHandler):
     def get(self):
 
         template = jinja_env.get_template('welcome.html')
-        user = self.request.cookies.get('user')
+        user_cookie = self.request.cookies.get('user')
 
-        if user:
+        if user_cookie and len(user_cookie.split('|')) == 2:
+            user = user_cookie.split('|')[0]
             self.response.write(template.render(username=user))
         else:
             self.redirect('/users/new')
