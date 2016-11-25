@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="small-6 small-centered column">
+        <h1 class="post-title">{{post.title}}</h1>
+        <p class="post-submitter">By {{post.submitter}} <em>{{post.submitted | post_age}}</em></p>
+        <p class="post-content">{{post.content}}</p>
+    </div>
+</div>
+{% for comment in comments %}
+{% if comment.key.integer_id() == edit_comment_id %}
+
+<div class="row">
+    <div class="small-6 small-centered column editable-comment">
+        <form action="/posts/{{post.key.integer_id()}}/comments/{{comment.key.integer_id()}}" method="POST">
+            <textarea name="content" class="comment-textarea">{{comment.content}}</textarea>
+            <input type="submit" value="Save">
+        </form>
+    </div>
+</div>
+
+{% else %}
+
+<div class="row">
+    <div class="small-6 small-centered column uneditable-comment">
+        <h6 class="comment-metadata">{{comment.submitter}} on {{comment.submitted}}</h6>
+        <p class="comment-content">{{comment.content}}</p>
+    </div>
+</div>
+
+{% endif %}
+
+{% endfor %}
+
+{% endblock %}

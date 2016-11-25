@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 import webapp2
-from handler import posts, users
+from handler import posts, users, comments
 
 app = webapp2.WSGIApplication([
     ('/', posts.FrontPageHandler),
@@ -26,6 +26,11 @@ app = webapp2.WSGIApplication([
     ('/users/new', users.SignUpHandler),
     ('/users/in', users.SignInHandler),
     ('/users/out', users.SignOutHandler),
-    ('/users/welcome', users.WelcomeHandler)
+    ('/users/welcome', users.WelcomeHandler),
+
+    webapp2.Route('/posts/<post_id:\d+>/comments', handler=comments.CreateCommentHandler),
+    webapp2.Route('/posts/<post_id:\d+>/comments/<comment_id:\d+>/edit', handler=comments.UpdateCommentHandler),
+    webapp2.Route('/posts/<post_id:\d+>/comments/<comment_id:\d+>', handler=comments.UpdateCommentHandler),
+    webapp2.Route('/posts/<post_id:\d+>/comments/<comment_id:\d+>/delete', handler=comments.DeleteCommentHandler)
 
 ], debug=True)

@@ -1,6 +1,8 @@
 import webapp2
 import os
 from model.post import Post
+from model.comment import Comment
+from util.auth import validate_user_cookie
 from jinja2 import Environment, FileSystemLoader
 
 template_dir = os.path.join(os.path.dirname(__file__), '../template')
@@ -47,4 +49,11 @@ class PostHandler(webapp2.RequestHandler):
 
     def get(self, post_id):
         post = Post.get_by_id(int(post_id))
-        self.response.out.write(self.template.render(post=post))
+        comments_query = Comment.query(Comment.post_id == int(post_id)).order(Comment.submitted)
+        comments = [comment for comment in comments_query]
+        cookie = self.request.cookies.get('user')
+        if validate_user_cookie(cookie):
+            user = cookie.split("|")[0]
+        else:
+            user = None
+        self.response.out.write(self.template.render(post=post, comments=comments, current_user=user))

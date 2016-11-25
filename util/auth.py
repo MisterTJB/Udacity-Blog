@@ -9,8 +9,11 @@ def validate_mac(data, this_mac):
     return this_mac == that_mac
 
 def validate_user_cookie(cookie):
-    user, mac = cookie.split('|')
-    return validate_mac(user, mac)
+
+    if cookie:
+        user, mac = cookie.split('|')
+        return validate_mac(user, mac)
+    return False
 
 def create_user_cookie(user):
     return "%s|%s" % (user, hmac(user))
