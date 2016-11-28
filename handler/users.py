@@ -60,6 +60,10 @@ class SignInHandler(AuthAwareRequestHandler):
         def check_password():
             from hashlib import sha512
             from model.user import salt
+
+            if not username:
+                return False
+
             user_data = User().get_by_id(username)
             if user_data:
                 return user_data.password == sha512(password + salt).hexdigest()
