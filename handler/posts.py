@@ -73,7 +73,7 @@ class NewPostFormHandler(AuthAwareRequestHandler):
 
     @user_is_signed_in
     def get(self, **kwargs):
-        self.write(jinja_env.get_template('new_post.html'),
+        self.write(jinja_env.get_template('new-post.html'),
                    {'form': {'title': '', 'content': '', 'error': False}, 'new': True})
 
 
@@ -92,7 +92,7 @@ class PostsHandler(AuthAwareRequestHandler):
             new_post_id = new_post_key.id()
             self.redirect('/posts/%d' % new_post_id)
         else:
-            template = jinja_env.get_template('new_post.html')
+            template = jinja_env.get_template('new-post.html')
             form_data = {'title': title, 'content': content, 'error': True}
             self.write(template, {'form': form_data, 'new': True})
 
@@ -125,7 +125,7 @@ class UpdateHandler(AuthAwareRequestHandler):
     @user_is_signed_in
     @user_is_author
     def get(self, **kwargs):
-        template = jinja_env.get_template('new_post.html')
+        template = jinja_env.get_template('new-post.html')
         post = Post().get_by_id(int(kwargs['post_id']))
         self.write(template, {'form': {'title': post.title,
                                        'content': post.content},
