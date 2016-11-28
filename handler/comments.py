@@ -3,6 +3,7 @@ import os
 from model.comment import Comment
 from model.post import Post
 from util.auth import validate_user_cookie
+from util.RequestHandler import AuthAwareRequestHandler
 from jinja2 import Environment, FileSystemLoader
 
 template_dir = os.path.join(os.path.dirname(__file__), '../template')
@@ -56,7 +57,7 @@ class CreateCommentHandler(webapp2.RequestHandler):
         self.redirect('/posts/' + post_id)
 
 
-class UpdateCommentHandler(webapp2.RequestHandler):
+class UpdateCommentHandler(AuthAwareRequestHandler):
 
     @user_is_signed_in
     @user_is_author
@@ -69,7 +70,7 @@ class UpdateCommentHandler(webapp2.RequestHandler):
         comments_query = Comment.query(Comment.post_id == int(post_id)).order(
             Comment.submitted)
         comments = [comment for comment in comments_query]
-        self.response.out.write(template.render(post=post, edit_comment_id=int(comment_id), comments=comments))
+        self.write(template, {'post': post, 'edit_comment_id': int(comment_id), 'comments': comments})
 
 
     @user_is_signed_in

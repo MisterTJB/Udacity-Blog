@@ -8,20 +8,20 @@
             <form action="/users/new" method="POST">
                 <div class="row collapse">
                     <div class="small-10  columns small-centered">
-                        {% if username_blank %}
+                        {% if context.username_blank %}
                             <input style="border-color: red; margin-bottom: 0" type="text" placeholder="Username" name="username">
                             <p class="text-right username-error" style="margin: 0 0;">I need a name, otherwise I won't know what to call you!</p>
-                        {% elif username_taken %}
+                        {% elif context.username_taken %}
                             <input style="border-color: red; margin-bottom: 0" type="text" placeholder="Username" name="username">
-                            <p class="text-right username-error" style="margin: 0 0;">Sigh. <em>{{username}}</em> is already taken. Great minds, right?</p>
+                            <p class="text-right username-error" style="margin: 0 0;">Sigh. <em>{{context.username}}</em> is already taken. Great minds, right?</p>
                         {% else %}
-                            <input type="text" style="margin-bottom: 0" placeholder="Username" name="username" value="{{username}}">
+                            <input type="text" style="margin-bottom: 0" placeholder="Username" name="username" value="{{context.username}}">
                         {% endif %}
                     </div>
                 </div>
                 <div class="row collapse">
                     <div class="small-10  columns small-centered">
-                        {% if password_blank %}
+                        {% if context.password_blank %}
                         <input style="margin-top: 10px; margin-bottom: 0; border-color: red;" type="password" placeholder="Really clever password" name="password">
                         <p class="text-right password-error" style="margin: 0 0;">No password? Are you mad?! Try again</p>
                         {% else %}

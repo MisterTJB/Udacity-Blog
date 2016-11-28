@@ -3,17 +3,17 @@
 {% block content %}
 <div class="row">
     <div class="small-6 small-centered column">
-        <h1 class="post-title">{{post.title}}</h1>
-        <p class="post-submitter">By {{post.submitter}} <em>{{post.submitted | post_age}}</em></p>
-        <p class="post-content">{{post.content}}</p>
+        <h1 class="post-title">{{context.post.title}}</h1>
+        <p class="post-submitter">By {{context.post.submitter}} <em>{{context.post.submitted | post_age}}</em></p>
+        <p class="post-content">{{context.post.content}}</p>
     </div>
 </div>
-{% for comment in comments %}
-{% if comment.key.integer_id() == edit_comment_id %}
+{% for comment in context.comments %}
+{% if comment.key.integer_id() == context.edit_comment_id %}
 
 <div class="row">
     <div class="small-6 small-centered column editable-comment">
-        <form action="/posts/{{post.key.integer_id()}}/comments/{{comment.key.integer_id()}}" method="POST">
+        <form action="/posts/{{context.post.key.integer_id()}}/comments/{{comment.key.integer_id()}}" method="POST">
             <textarea name="content" class="comment-textarea">{{comment.content}}</textarea>
             <input type="submit" value="Save">
         </form>

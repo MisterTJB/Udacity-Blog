@@ -8,8 +8,8 @@
             <form action="/users/in" method="POST">
                 <div class="row collapse">
                     <div class="small-10  columns small-centered">
-                        {% if invalid_credentials %}
-                            <input type="text" placeholder="Username" name="username" value="{{username}}">
+                        {% if context.invalid_credentials %}
+                            <input type="text" placeholder="Username" name="username" value="{{context.username}}">
                         {% else %}
                             <input type="text" placeholder="Username" name="username">
                         {% endif %}
@@ -24,7 +24,7 @@
                     <input type="submit" value="Sign In">
                 </div>
             </form>
-            {% if invalid_credentials %}
+            {% if context.invalid_credentials %}
             <p class="text-centered invalid-login">Your credentials are so clever you might have typed them wrong...</p>
             {% endif %}
         </div>
