@@ -73,7 +73,20 @@ class TestAdvancedBlogFeatures(unittest.TestCase):
         self.assertEqual(unedited_submission_info, edited_submission_info)
 
     def testFormValidationIsPerformedOnEditedPost(self):
-        self.fail()
+        self.testapp.set_cookie('user', create_user_cookie('Valid User'))
+        response = self.testapp.request('/posts/%d' % self.initial_post_key.integer_id())
+
+        # Check that an edit button is available and redirects to the edit page
+        edit_button = response.html.select('.post-edit')
+        self.assertEqual(len(edit_button), 1)
+        edit_response = response.click(description="Edit", href="/posts/\d+/edit")
+        # Perform an edit
+        edit_response.form['title'] = ""
+        edit_response.form['content'] = "EDITED CONTENT"
+        invalid_form = edit_response.form.submit()
+        validation_error = invalid_form.html.select('.validation-error')
+
+        self.assertEqual(len(validation_error), 1)
 
     def testNonAuthorHasNoEditOption(self):
 

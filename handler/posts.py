@@ -137,12 +137,20 @@ class UpdateHandler(AuthAwareRequestHandler):
         title = self.request.POST['title']
         content = self.request.POST['content']
 
-        post = Post.get_by_id(int(post_id))
-        post.title = title
-        post.content = content
-        post.put()
+        if title != '' and content != '':
+            post = Post.get_by_id(int(post_id))
+            post.title = title
+            post.content = content
+            post.put()
 
-        self.redirect('/posts/' + post_id)
+            self.redirect('/posts/' + post_id)
+
+        else:
+            template = jinja_env.get_template('new-post.html')
+            form_data = {'title': title, 'content': content, 'error': True}
+            self.write(template, {'form': form_data, 'new': True})
+
+
 
 class DeleteHandler(webapp2.RequestHandler):
 
