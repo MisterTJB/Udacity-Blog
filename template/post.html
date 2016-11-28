@@ -3,10 +3,21 @@
 {% block content %}
 <div class="row">
     <div class="small-6 small-centered column">
+        <h1 class="post-likes">{{post.likes}}</h1>
         <h1 class="post-title">{{post.title}}</h1>
         <p class="post-submitter">By {{post.submitter}} <em>{{post.submitted | post_age}}</em></p>
         <p class="post-content">{{post.content}}</p>
-        <a>Like</a> <a href="/posts/{{post.key.integer_id()}}/edit">Edit</a> <a href="/posts/{{post.key.integer_id()}}/delete">Delete</a>
+        {% if post.submitter == current_user %}
+        <a class="post-edit" href="/posts/{{post.key.integer_id()}}/edit">Edit</a> <a class="post-delete" href="/posts/{{post.key.integer_id()}}/delete">Delete</a>
+        {% elif current_user %}
+        <a class="post-like" href="/posts/{{post.key.integer_id()}}/like">
+            {%- if has_liked -%}
+            Unlike
+            {%- else -%}
+            Like
+            {%- endif -%}
+        </a>
+        {% endif %}
     </div>
 </div>
 {% for comment in comments %}

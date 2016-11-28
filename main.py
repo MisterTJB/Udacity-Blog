@@ -19,9 +19,13 @@ from handler import posts, users, comments
 
 app = webapp2.WSGIApplication([
     ('/', posts.FrontPageHandler),
-    ('/posts/new', posts.NewPostFormHandler), # TODO merge in to PostsHandler as GET on /posts
+    ('/posts/new', posts.NewPostFormHandler),
     ('/posts', posts.PostsHandler),
-    ('/posts/(\d+)', posts.PostHandler),
+    webapp2.Route('/posts/<post_id:\d+>', handler=posts.PostHandler),
+
+    webapp2.Route('/posts/<post_id:\d+>/edit', handler=posts.UpdateHandler),
+    webapp2.Route('/posts/<post_id:\d+>/delete', handler=posts.DeleteHandler),
+    webapp2.Route('/posts/<post_id:\d+>/like', handler=posts.LikeHandler),
 
     ('/users/new', users.SignUpHandler),
     ('/users/in', users.SignInHandler),

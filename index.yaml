@@ -14,3 +14,10 @@ indexes:
   properties:
   - name: post_id
   - name: submitted
+
+- kind: Post
+  properties:
+  - name: votes
+    direction: desc
+  - name: submitted
+    direction: desc

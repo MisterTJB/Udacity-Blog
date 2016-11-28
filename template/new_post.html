@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<form method="POST" action="/posts" id="new-post-form">
+<form method="POST" {% if form.new %} action="/posts" {% endif %} id="new-post-form">
     Title <input class="form-title" type="text" name="title" value="{{form.title}}">
     <textarea class="form-content" form="new-post-form" name="content">{{form.content}}</textarea>
     <input type="submit">

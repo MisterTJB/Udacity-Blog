@@ -3,6 +3,7 @@ import unittest
 from google.appengine.ext import testbed
 from main import app
 from model.post import Post
+from util.auth import create_user_cookie
 
 class TestBasicBlogFeatures(unittest.TestCase):
     def setUp(self):
@@ -38,7 +39,7 @@ class TestBasicBlogFeatures(unittest.TestCase):
         post = response.html.find(id=test_post_id)
         self.assertIsNotNone(post)
 
-        post_votes = post.select('.votes')[0].get_text()
+        post_votes = post.select('.likes')[0].get_text()
         post_title = post.select('.title-anchor')[0].get_text()
         post_href = post.select('.title-anchor')[0].get('href')
         post_submission_info = post.select('.submission-info')[0].get_text()
@@ -53,13 +54,28 @@ class TestBasicBlogFeatures(unittest.TestCase):
 
     # posts/new renders a form for submitting new posts
     def testThereIsAFormForSubmittingNewPosts(self):
+
+        # Sign a user in
+        self.testapp.set_cookie('user', create_user_cookie('user'))
+
         response = self.testapp.get("/posts/new")
         self.assertEqual(response.status_int, 200)
         form = response.html.find('form')
         self.assertIsNotNone(form)
 
+    def testCreatePostRedirectsIfNotSignedIn(self):
+        response = self.testapp.get("/posts/new")
+        self.assertEqual(response.status_int, 302)
+
+        redirect_response = response.follow()
+        self.assertEqual(redirect_response.request.path, "/users/in")
+
     # POSTing to posts/new with valid data adds the post to the datastore
     def testNewPostFormAddsPostToDatastoreIfValid(self):
+
+        # Sign a user in
+        self.testapp.set_cookie('user', create_user_cookie('user'))
+
         response = self.testapp.get('/posts/new')
         form = response.form
         form['title'] = 'Test title'
@@ -74,8 +90,27 @@ class TestBasicBlogFeatures(unittest.TestCase):
         self.assertEqual(title, form['title'].value)
         self.assertEqual(content, form['content'].value)
 
+    def testPOSTDoesNotAtPostToDatastoreIfNotSignedIn(self):
+        pre_posts_query = Post.query()
+        pre_total = len([post for post in pre_posts_query])
+
+        post_response = self.testapp.post('/posts', {'title': 'junk', 'content': 'junk'})
+        self.assertEqual(post_response.status_int, 302)
+        redirect_response = post_response.follow()
+        self.assertEqual(redirect_response.request.path, "/users/in")
+
+        post_posts_query = Post.query()
+        post_total = len([post for post in post_posts_query])
+        self.assertEqual(pre_total, post_total)
+
+
+
     # POSTing to /new with invalid data renders /new with errors
     def testNewPostFormRendersWithErrorsIfInvalid(self):
+
+        # Sign a user in
+        self.testapp.set_cookie('user', create_user_cookie('user'))
+
         response = self.testapp.get('/posts/new')
         form = response.form
         form['title'] = 'Test title'
