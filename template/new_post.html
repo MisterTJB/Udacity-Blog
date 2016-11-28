@@ -2,14 +2,14 @@
 
 {% block content %}
 
-<form method="POST" {% if form.new %} action="/posts" {% endif %} id="new-post-form">
-    Title <input class="form-title" type="text" name="title" value="{{form.title}}">
-    <textarea class="form-content" form="new-post-form" name="content">{{form.content}}</textarea>
+<form method="POST" {% if context.new %} action="/posts" {% endif %} id="new-post-form">
+    Title <input class="form-title" type="text" name="title" value="{{context.form.title}}">
+    <textarea class="form-content" form="new-post-form" name="content">{{context.form.content}}</textarea>
     <input type="submit">
 </form>
 
 
-{% if form.error %}
+{% if context.form.error %}
 <strong class="validation-error">Incomplete form</strong>
 {% endif %}
 

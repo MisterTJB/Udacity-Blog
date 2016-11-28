@@ -1,5 +1,6 @@
 import webapp2
 import os
+from util.RequestHandler import AuthAwareRequestHandler
 from model.post import Post
 from model.comment import Comment
 from util.auth import validate_user_cookie
@@ -62,23 +63,22 @@ def user_has_liked_post(user_id, post_id):
         return user_id in post.liked_by
 
 
-class FrontPageHandler(webapp2.RequestHandler):
+class FrontPageHandler(AuthAwareRequestHandler):
     template = jinja_env.get_template('posts.html')
 
     def get(self):
-        self.response.out.write(self.template.render(
-            posts=Post().query().order(-Post.likes, -Post.submitted)))
+        self.write(self.template, {'posts': Post().query().order(-Post.likes, -Post.submitted)})
 
-class NewPostFormHandler(webapp2.RequestHandler):
-    template = jinja_env.get_template('new_post.html')
+class NewPostFormHandler(AuthAwareRequestHandler):
 
     @user_is_signed_in
     def get(self, **kwargs):
-        form_data = {'title': '', 'content': '', 'error': False, 'new': True}
-        self.response.out.write(self.template.render(form=form_data))
+        self.write(jinja_env.get_template('new_post.html'),
+                   {'form': {'title': '', 'content': '', 'error': False}, 'new': True})
 
-class PostsHandler(webapp2.RequestHandler):
-    template = jinja_env.get_template('new_post.html')
+
+class PostsHandler(AuthAwareRequestHandler):
+
 
     @user_is_signed_in
     def post(self, **kwargs):
@@ -92,13 +92,15 @@ class PostsHandler(webapp2.RequestHandler):
             new_post_id = new_post_key.id()
             self.redirect('/posts/%d' % new_post_id)
         else:
-            form_data = {'title': title, 'content': content, 'error': True, 'new': True}
-            self.response.out.write(self.template.render(form=form_data))
+            template = jinja_env.get_template('new_post.html')
+            form_data = {'title': title, 'content': content, 'error': True}
+            self.write(template, {'form': form_data, 'new': True})
 
-class PostHandler(webapp2.RequestHandler):
-    template = jinja_env.get_template('post.html')
+class PostHandler(AuthAwareRequestHandler):
+
 
     def get(self, **kwargs):
+        template = jinja_env.get_template('post.html')
         post_id = kwargs['post_id']
         post = Post.get_by_id(int(post_id))
         comments_query = Comment.query(Comment.post_id == int(post_id)).order(Comment.submitted)
@@ -112,23 +114,22 @@ class PostHandler(webapp2.RequestHandler):
             has_liked = None
 
         if post:
-            self.response.out.write(self.template.render(post=post,
-                                                         comments=comments,
-                                                         current_user=user,
-                                                         has_liked=has_liked))
+            self.write(template, {'post': post, 'comments': comments,
+                                  'current_user': user,
+                                  'has_liked': has_liked})
         else:
             webapp2.abort(404)
 
-class UpdateHandler(webapp2.RequestHandler):
+class UpdateHandler(AuthAwareRequestHandler):
 
     @user_is_signed_in
     @user_is_author
     def get(self, **kwargs):
         template = jinja_env.get_template('new_post.html')
         post = Post().get_by_id(int(kwargs['post_id']))
-        self.response.out.write(template.render(form={'title': post.title,
-                                                      'content': post.content,
-                                                      'new': False}))
+        self.write(template, {'form': {'title': post.title,
+                                       'content': post.content},
+                              'new': False})
     @user_is_signed_in
     @user_is_author
     def post(self, **kwargs):

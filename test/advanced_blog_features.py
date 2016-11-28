@@ -72,6 +72,9 @@ class TestAdvancedBlogFeatures(unittest.TestCase):
         self.assertEqual(edited_content, "EDITED CONTENT")
         self.assertEqual(unedited_submission_info, edited_submission_info)
 
+    def testFormValidationIsPerformedOnEditedPost(self):
+        self.fail()
+
     def testNonAuthorHasNoEditOption(self):
 
         # Sign in as "Invalid User" and navigate to the post's page

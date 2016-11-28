@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% for post in posts %}
+{% for post in context.posts %}
 <div class="post row" id="{{post.key.id()}}">
     <div class="small-8 column small-centered">
         <h2 class="likes">{{post.likes}}</h2>

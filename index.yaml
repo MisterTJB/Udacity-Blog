@@ -17,6 +17,13 @@ indexes:
 
 - kind: Post
   properties:
+  - name: likes
+    direction: desc
+  - name: submitted
+    direction: desc
+
+- kind: Post
+  properties:
   - name: votes
     direction: desc
   - name: submitted
