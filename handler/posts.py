@@ -13,7 +13,12 @@ jinja_env = Environment(loader = FileSystemLoader(template_dir), autoescape=True
 def post_age_formatter(creation_timestamp):
     return creation_timestamp.date().isoformat()
 
+def trim_to_two_sentences(post):
+    trimmed_post = post.split(".")[:3]
+    return '. '.join(trimmed_post) + "..."
+
 jinja_env.filters['post_age'] = post_age_formatter
+jinja_env.filters['trim'] = trim_to_two_sentences
 
 def user_is_author(fn):
     def redirect_if_not_author(*args, **kwargs):

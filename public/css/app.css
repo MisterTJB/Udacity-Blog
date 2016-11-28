@@ -25,3 +25,29 @@
 .signup-panel .button {
   margin-left: 35%;
 }
+
+.post {
+  margin-top: 5%;
+}
+
+.comments:nth-child(even) {
+  background: #f8f8f8;
+}
+.comments:nth-child(odd) {
+  background: #FFF
+}
+
+.comment, .editable-comment {
+  margin-top: 1%;
+  margin-bottom: 1%;
+}
+
+.add-comment {
+  margin-top: 2.5%;
+}
+
+.validation-error {
+  font-size: 13px;
+  font-weight: 200;
+  margin-left: 25%;
+}

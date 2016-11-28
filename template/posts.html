@@ -3,11 +3,15 @@
 {% block content %}
 {% for post in context.posts %}
 <div class="post row" id="{{post.key.id()}}">
-    <div class="small-8 column small-centered">
-        <h2 class="likes">{{post.likes}}</h2>
-        <h2 class="title-header"><a class="title-anchor" href="/posts/{{post.key.id()}}">{{ post.title }}</a></h2>
-        <h3 class="submission-info">Submitted by {{ post.submitter }} on {{post.submitted | post_age}}</h3>
-        <p class="content">{{ post.content }}</p>
+    <div class="small-11 medium-10 small-centered column">
+        <div class="small-1 small-right column">
+            <h2 class="likes">{{post.likes}}</h2>
+        </div>
+        <div class="small-11 column">
+            <h2 class="title-header"><a class="title-anchor" href="/posts/{{post.key.id()}}">{{ post.title }}</a></h2>
+            <h6 class="submission-info">Written by {{ post.submitter }} | {{post.submitted | post_age}}</h6>
+            <p class="content">{{ post.content | trim }}</p>
+        </div>
     </div>
 </div>
 

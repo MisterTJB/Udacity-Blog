@@ -2,11 +2,16 @@
 
 {% block content %}
 <div class="row">
-    <div class="small-6 small-centered column">
-        <h1 class="post-likes">{{context.post.likes}}</h1>
-        <h1 class="post-title">{{context.post.title}}</h1>
-        <p class="post-submitter">By {{context.post.submitter}} <em>{{context.post.submitted | post_age}}</em></p>
-        <p class="post-content">{{context.post.content}}</p>
+    <div class="small-12">
+        <h1 class="post-title text-center">{{context.post.title}}</h1>
+        <p class="post-submitter text-center">Written by {{context.post.submitter}} | {{context.post.submitted | post_age}}</p>
+    </div>
+
+    <div class="small-9 small-centered column">
+        {% for paragraph in context.post.content.split("\n") %}
+        <p class="post-content text-justify">{{paragraph}}</p>
+        {% endfor %}
+        <p>Liked by <span class="post-likes">{{context.post.likes}}</span>
         {% if context.post.submitter == context.current_user %}
         <a class="post-edit" href="/posts/{{context.post.key.integer_id()}}/edit">Edit</a> <a class="post-delete" href="/posts/{{context.post.key.integer_id()}}/delete">Delete</a>
         {% elif context.current_user %}
@@ -18,13 +23,21 @@
             {%- endif -%}
         </a>
         {% endif %}
+        </p>
     </div>
+</div>
+
+<hr>
+<div class="row">
+    <div class="small-12 columns">
+    <h2 class="text-center">Comments</h2>
+        </div>
 </div>
 {% for comment in context.comments %}
 
-<div class="row">
+<div class="row comments">
     <div class="small-6 small-centered column comment" id="{{comment.key.integer_id()}}">
-        <h6 class="comment-metadata">{{comment.submitter}} on {{comment.submitted}}</h6>
+        <h6 class="comment-metadata">{{comment.submitter}} on {{comment.submitted | post_age}}</h6>
         <p class="comment-content">{{comment.content}}</p>
         {% if comment.submitter == context.current_user %}
         <a class="comment-options" href="/posts/{{context.post.key.integer_id()}}/comments/{{comment.key.integer_id()}}/edit">Edit</a> <a href="/posts/{{context.post.key.integer_id()}}/comments/{{comment.key.integer_id()}}/delete">Delete</a>
@@ -34,11 +47,16 @@
 </div>
 
 {% endfor %}
+<div class="row add-comment">
+    <div class="small-12 columns">
+        <h4 class="text-center">Add A Comment</h4>
+    </div>
+</div>
 <div class="row">
     <div class="small-6 small-centered column">
-        <form action="/posts/{{context.post.key.integer_id()}}/comments" method="POST">
-            <textarea name="content"></textarea>
-            <input type="submit">
+        <form class="comment-form" action="/posts/{{context.post.key.integer_id()}}/comments" method="POST">
+            <textarea name="content" rows="5"></textarea>
+            <input type="submit" class="button">
         </form>
     </div>
 </div>

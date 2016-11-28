@@ -48,7 +48,7 @@ class TestBasicBlogFeatures(unittest.TestCase):
         self.assertEqual(post_votes, "1")
         self.assertEqual(post_title, "Test")
         self.assertEqual(post_href, "/posts/%d" % test_post_id)
-        self.assertEqual(post_submission_info, "Submitted by Me on %s" %
+        self.assertEqual(post_submission_info, "Written by Me | %s" %
                          datetime.datetime.utcnow().date().isoformat())
         self.assertTrue(post_content, "Some content")
 

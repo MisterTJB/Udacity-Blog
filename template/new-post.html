@@ -2,15 +2,32 @@
 
 {% block content %}
 
-<form method="POST" {% if context.new %} action="/posts" {% endif %} id="new-post-form">
-    Title <input class="form-title" type="text" name="title" value="{{context.form.title}}">
-    <textarea class="form-content" form="new-post-form" name="content">{{context.form.content}}</textarea>
-    <input type="submit">
-</form>
+<div class="row">
+    <div class="small-6 small-centered columns">
 
 
-{% if context.form.error %}
-<strong class="validation-error">Incomplete form</strong>
-{% endif %}
+        <form method="POST" {% if context.new %} action="/posts" {% endif %} id="new-post-form">
+            <label for="title">Title</label>
+            {% if context.form.title == '' and context.form.error %}
+                <input class="form-title" style="border-color: red" type="text" name="title" value="{{context.form.title}}">
+            {% else %}
+                <input class="form-title" type="text" name="title" value="{{context.form.title}}">
+            {% endif %}
+            <label for="content">Post</label>
+            {% if context.form.content == '' and context.form.error %}
+                <textarea class="form-content" style="border-color: red" rows="15" form="new-post-form" name="content">{{context.form.content}}</textarea>
+            {% else %}
+                <textarea class="form-content" rows="15" form="new-post-form" name="content">{{context.form.content}}</textarea>
+            {% endif %}
+            {% if context.form.error %}
+                <p class="validation-error text-right">Nope. I <em>refuse</em> to submit this post without both a title and some content</p>
+            {% endif %}
+            <input type="submit" class="button">
+        </form>
+
+
+
+    </div>
+</div>
 
 {% endblock %}
