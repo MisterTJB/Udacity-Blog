@@ -22,10 +22,12 @@ def user_is_author(fn):
         comment_id = kwargs['comment_id']
         comment = Comment().get_by_id(int(comment_id))
 
-        if comment.submitter == user_id:
+        if comment and comment.submitter == user_id:
             fn(*args, **kwargs)
-        else:
+        elif comment:
             self.redirect('/posts/' + kwargs['post_id'])
+        else:
+            self.abort(404)
 
     return redirect_if_not_author
 
@@ -70,7 +72,11 @@ class UpdateCommentHandler(AuthAwareRequestHandler):
         comments_query = Comment.query(Comment.post_id == int(post_id)).order(
             Comment.submitted)
         comments = [comment for comment in comments_query]
-        self.write(template, {'post': post, 'edit_comment_id': int(comment_id), 'comments': comments})
+
+        if post:
+            self.write(template, {'post': post, 'edit_comment_id': int(comment_id), 'comments': comments})
+        else:
+            self.abort(404)
 
 
     @user_is_signed_in

@@ -164,6 +164,10 @@ class DeleteHandler(webapp2.RequestHandler):
     def get(self, **kwargs):
         post_id = kwargs['post_id']
         Post.get_by_id(int(post_id)).key.delete()
+
+        comments = Comment.query(Comment.post_id == int(post_id))
+        for comment in comments:
+            comment.key.delete()
         self.redirect('/')
 
 class LikeHandler(webapp2.RequestHandler):
