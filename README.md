@@ -47,9 +47,9 @@ The primary entity in a blog are posts: posts can be read by anyone, but may onl
 
 Signed in users can also 'Like' a post, which elevates the position of the post on the main page.
 
-### Create
+### Create A Post
 
-Any signed in user can create a post by clicking the 'New Post' link. This will direct them to a form for creating new posts.
+Any signed in user can create a post by clicking the 'New Post' link; this will direct them to a form for creating new posts.
 
 ![New post form](screenshots/new-post.png)
 
@@ -57,15 +57,17 @@ In order to submit a new post, all fields must be filled out, otherwise the page
 
 ![New post validation errors](screenshots/new-post-validation.png)
 
-### Read
+### Read Posts
 
-Any user can see a list of posts on the homepage (accessible via the 'Home' link), and specific posts can be viewed in their entirety by clicking on their title.
+Any user can see a list of posts on the homepage (accessible via the 'Home' link); posts are listed in order of popularity, and then by newest.
+
+![Homepage link to post](screenshots/post-link.png) 
+
+A specific post can be viewed in its entirety by clicking on its title; this directs users to the page for that post.
 
 ![Post page](screenshots/post.png)
 
-Posts are listed in order of popularity, and then by newest.
-
-### Update
+### Edit A Post
 
 If a user is signed in as the author of a given post, they can perform edits on it. The Edit link is only available to users that are authors of a given post.
 
@@ -75,13 +77,13 @@ Clicking the Edit link renders the editing page, which allows user to submit the
 
 ![Edit page](screenshots/edit-page.png)
 
-### Delete
+### Delete A Post
 
 If a user is signed in as the author of a given page, they are also able to delete a post by clicking the Delete link. This will permanently remove a post from the blog.
 
 ![Delete](screenshots/delete-post.png)
 
-### Like / Unlike
+### Like / Unlike A Post
 
 A signed in user who has _not_ authored a given post is eligible to 'Like' that post. Liking a post is carried out by clicking the Like link on the post's page.
 
@@ -97,7 +99,7 @@ Liking posts affects the counter associated with each post, which determines the
 
 Every post may be associated with comments about that post. Comments can be added by any signed in user, but only authors of a given comment may edit or delete their comment.
 
-### Create
+### Add A Comment
 
 If a user is signed in, they are eligible to add a comment; otherwise they are prompted to sign in.
 
@@ -107,13 +109,13 @@ A signed in user posts a comment via the comment form.
 
 ![Add a comment](screenshots/add-comment.png)
 
-### Read
+### Reading Comments
 
 Any user can read comments. Comments are displayed in chronological order underneath a post so that they can be read from top to bottom as one continuous conversation.
 
 ![Read comments](screenshots/read-comments.png)
 
-### Update
+### Edit A Comment
 
 A signed in user is given the option to edit their own comments. Users access the edit page for the comments by clicking the Edit link.
 
@@ -125,7 +127,7 @@ The edit page displays a form in the context of the conversation so that users a
 
 The timestamp of edited comments is not affected, so comments continue to appear in order of their creation.
 
-### Delete
+### Delete A Comment
 
 A signed in user is given the option to delete their own comments. Users delete a comment by clicking the Delete link
 
