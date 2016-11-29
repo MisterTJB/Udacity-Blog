@@ -20,10 +20,15 @@ def check_password(username, password):
         return user_data.password == sha512(password + salt).hexdigest()
     return False
 
+
 class PasswordProperty(db.StringProperty):
+    """
+    A PasswordProperty obfuscates a password so that that password may
+    be stored securely.
+    """
 
     def _validate(self, value):
-        if not isinstance(value, (str)):
+        if not isinstance(value, str):
             raise TypeError('expected a string, got %s' % repr(value))
 
     def _to_base_type(self, value):
@@ -32,5 +37,14 @@ class PasswordProperty(db.StringProperty):
     def _from_base_type(self, value):
         return value
 
+
 class User(db.Model):
-  password = PasswordProperty()
+    """
+    Models a user
+
+    Attributes:
+        id = A user's username
+        password = A user's password
+    """
+
+    password = PasswordProperty()
