@@ -1,3 +1,14 @@
+"""
+Test suite for testing the 'basic' features of a blog.
+
+In particular, this test suite tests:
+
+    - Creating posts
+
+Paths for signed in and sign out users are tested
+
+"""
+
 import webtest
 import unittest
 from google.appengine.ext import testbed
@@ -5,7 +16,9 @@ from main import app
 from model.post import Post
 from util.auth import create_user_cookie
 
+
 class TestBasicBlogFeatures(unittest.TestCase):
+
     def setUp(self):
         self.testapp = webtest.TestApp(app)
         self.testbed = testbed.Testbed()
@@ -14,13 +27,15 @@ class TestBasicBlogFeatures(unittest.TestCase):
         self.testbed.init_memcache_stub()
 
         # Set up an initial post
-        initial_post = Post(title="Test", content="Some content", submitter="Me")
+        initial_post = Post(title="Test",
+                            content="Some content", submitter="Me")
         self.initial_post_key = initial_post.put()
 
     def tearDown(self):
         self.testbed.deactivate()
 
-    # The front page has a <div class="post"> for each of the posts in the datastore
+    # The front page has a <div class="post"> for each of the posts in
+    # the datastore
     def testFrontPageListsBlogPosts(self):
         response = self.testapp.get("/")
         self.assertEquals(response.status_int, 200)
@@ -94,7 +109,8 @@ class TestBasicBlogFeatures(unittest.TestCase):
         pre_posts_query = Post.query()
         pre_total = len([post for post in pre_posts_query])
 
-        post_response = self.testapp.post('/posts', {'title': 'junk', 'content': 'junk'})
+        post_response = self.testapp.post('/posts',
+                                          {'title': 'junk', 'content': 'junk'})
         self.assertEqual(post_response.status_int, 302)
         redirect_response = post_response.follow()
         self.assertEqual(redirect_response.request.path, "/users/in")
@@ -102,8 +118,6 @@ class TestBasicBlogFeatures(unittest.TestCase):
         post_posts_query = Post.query()
         post_total = len([post for post in post_posts_query])
         self.assertEqual(pre_total, post_total)
-
-
 
     # POSTing to /new with invalid data renders /new with errors
     def testNewPostFormRendersWithErrorsIfInvalid(self):
@@ -126,14 +140,13 @@ class TestBasicBlogFeatures(unittest.TestCase):
         self.assertEqual(content, form['content'].value)
         self.assertIsNotNone(error)
 
-
     # GETing posts/post-id renders post with identifier post-id if post-id
     # exists
     def testBlogPostsHaveTheirOwnPageForValidIdentifier(self):
         response = self.testapp.get("/posts/%d" % self.initial_post_key.id())
         self.assertEqual(response.status_int, 200)
 
-    # GETing posts/post-id renders 404 if post with identifer post-id does not
+    # GETing posts/post-id renders 404 if post with identifier post-id does not
     # exist
     def testBlogPosts404ForInvalidIdentifier(self):
         response = self.testapp.get("/posts/junk", status=404)

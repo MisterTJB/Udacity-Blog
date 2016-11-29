@@ -1,10 +1,22 @@
+"""
+Test suite for testing the registration and authentication of user
+
+In particular, this test suite tests:
+
+    - Creating an account
+    - Signing in to an account
+    - Signing out from an account
+"""
+
 import webtest
 import unittest
 from google.appengine.ext import testbed
 from main import app
 from model.user import User
 
+
 class TestUserFeatures(unittest.TestCase):
+
     def setUp(self):
         self.testapp = webtest.TestApp(app)
         self.testbed = testbed.Testbed()
@@ -30,7 +42,8 @@ class TestUserFeatures(unittest.TestCase):
         from hashlib import sha512
         from model.user import salt
         user = User().get_by_id("Test")
-        self.assertEqual(user.password, sha512("test_password" + salt).hexdigest())
+        self.assertEqual(user.password,
+                         sha512("test_password" + salt).hexdigest())
 
     def testUserCanCreateAccountWithValidCredentials(self):
         _ = self.signUpNewUserWithUsername("User_02")
