@@ -43,9 +43,9 @@ Only signed in users have the option to sign out; users sign out by clicking the
 
 ## Posts
 
-The primary entity in a blog are posts: posts can be read by anyone, but may only be created, edited, and deleted by specific users.
+The primary entity in a blog are posts: posts can be read by anyone, but may only be created by account holders; furthermore, only authors are able to edit, and delete their posts.
 
-Signed in users can 'Like' a post, which elevates the position of the post on the main page.
+Signed in users can also 'Like' a post, which elevates the position of the post on the main page.
 
 ### Create
 
