@@ -27,11 +27,9 @@ Existing users can log in via the Sign In page, which is accessed via the 'Sign 
 
 ![Signin](screenshots/signin.png)
 
-Note that invalid credentials will cause a validation error
+Note that invalid credentials will cause a validation error. (For the sake of security, the data that triggered the validation error is not indicated).
 
 ![Signin validation errors](screenshots/signin-validation.png)
-
-For the sake of security, the data that triggered the validation error is not indicated.
 
 When users sign in, they receive a warm greeting
 
