@@ -52,6 +52,8 @@
         <h4 class="text-center">Add A Comment</h4>
     </div>
 </div>
+
+{% if signed_in %}
 <div class="row">
     <div class="small-6 small-centered column">
         <form class="comment-form" action="/posts/{{context.post.key.integer_id()}}/comments" method="POST">
@@ -60,4 +62,9 @@
         </form>
     </div>
 </div>
+{% else %}
+<div class="row">
+    <p class="text-center">You must be <a href="/users/in">signed in</a> to post a comment</p>
+</div>
+{% endif %}
 {% endblock %}
