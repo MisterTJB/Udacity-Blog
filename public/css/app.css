@@ -51,3 +51,7 @@
   font-weight: 200;
   margin-left: 25%;
 }
+
+.comment-metadata {
+  text-decoration: underline;
+}
