@@ -27,7 +27,7 @@
 }
 
 .post {
-  margin-top: 5%;
+  margin-top: 2%;
 }
 
 .comments:nth-child(even) {
@@ -54,4 +54,9 @@
 
 .comment-metadata {
   text-decoration: underline;
+}
+
+.post .content {
+  padding-bottom: 2%;
+  border-bottom: 1px solid grey;
 }
