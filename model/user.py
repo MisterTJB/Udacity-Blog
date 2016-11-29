@@ -3,6 +3,23 @@ from hashlib import sha512
 
 salt = '4c93dd3e'
 
+
+def check_password(username, password):
+    """
+    Salt and hash a password, and check against the datastore
+
+    Returns:
+        True if the credentials are valid
+    """
+
+    if not username:
+        return False
+
+    user_data = User().get_by_id(username)
+    if user_data:
+        return user_data.password == sha512(password + salt).hexdigest()
+    return False
+
 class PasswordProperty(db.StringProperty):
 
     def _validate(self, value):
