@@ -14,8 +14,6 @@ class Post(db.Model):
         liked_by: A repeated field comprising user_ids for users that have
             liked this post
         likes: A computed property equivalent to len(liked_by) + 1
-
-
     """
     title = db.StringProperty()
     content = db.TextProperty()
