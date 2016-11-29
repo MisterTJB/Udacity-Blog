@@ -23,6 +23,9 @@
                 <p class="validation-error text-right">Nope. I <em>refuse</em> to submit this post without both a title and some content</p>
             {% endif %}
             <input type="submit" class="button">
+            {% if not context.new %}
+            <a class="button" href="/posts/{{ context.post_id }}">Cancel</a>
+            {% endif %}
         </form>
 
 

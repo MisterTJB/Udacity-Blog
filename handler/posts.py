@@ -270,7 +270,9 @@ class UpdateHandler(AuthAwareRequestHandler):
         post = Post().get_by_id(int(kwargs['post_id']))
         self.write(template, {'form': {'title': post.title,
                                        'content': post.content},
-                              'new': False})
+                              'new': False,
+                              'post_id': kwargs['post_id']
+                              })
 
     @user_is_signed_in
     @user_is_author

@@ -22,6 +22,7 @@
         <form action="/posts/{{context.post.key.integer_id()}}/comments/{{comment.key.integer_id()}}" method="POST">
             <textarea name="content" rows="5" class="comment-textarea">{{comment.content}}</textarea>
             <input type="submit" class="button" value="Save">
+            <a class="button" href="/posts/{{context.post.key.integer_id()}}">Cancel</a>
         </form>
     </div>
 </div>
