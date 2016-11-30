@@ -79,13 +79,15 @@ class TestCommentFeatures(unittest.TestCase):
             '.comment-content')[0].get_text()
         self.assertEqual(latest_comment_content, "New content")
 
-    def testSignedOutUserCannotAddComment(self):
+    def testSignedOutUserCannotAddCommentViaUI(self):
         response = self.testapp.request("/posts/%d" % self.test_post_id)
-        response.form['content'] = "New content"
-        form_response = response.form.submit()
-        redirect_response = form_response.follow()
-        sign_up_panel = redirect_response.html.select('.signup-panel')
-        self.assertGreater(len(sign_up_panel), 0)
+        comment_form = response.html.select('.comment-form')
+        self.assertEqual(len(comment_form), 0)
+
+    def testSignOutUserCannotAddCommentViaPost(self):
+        url = "/posts/%d/comments" % self.test_post_id
+        post_response = self.testapp.post(url, {'content': 'some content'})
+        self.assertEqual(post_response.status_int, 302)
 
     def testUserCanEditTheirOwnComment(self):
         self.testapp.set_cookie('user', create_user_cookie('Test_User_01'))
