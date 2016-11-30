@@ -1,11 +1,24 @@
 # Overview
 This project implements a multi-user blog using Google App Engine. Users are able to sign up for accounts; contribute posts; and add comments to blog posts. Additionally, all submitted content (i.e. posts and comments) can be edited or deleted.
 
-# Accessing The Project
+# Running The Project
+
+### Remotely
 
 The project is hosted at [http://nd004-blog.appspot.com](http://nd004-blog.appspot.com). You'll know you're in the right place when you see this page:
 
 ![Homepage](screenshots/homepage.png)
+
+### Locally
+
+Running the project locally requires the [Google App Engine SDK for Python](https://cloud.google.com/appengine/docs/python/download) to be installed on your local machine.
+
+Assuming that the SDK is installed, the project can be run by:
+
+1. Downloading this project to a local machine
+2. Navigating to the project directory in the terminal. E.g. `cd /path/to/Udacity-Blog`
+3. Running `dev_appserver.py .`
+4. The site should now be available at localhost:8080
 
 # Functionality and Usage
 
