@@ -1,149 +1,17 @@
 import webapp2
 import os
+from jinja2 import Environment, FileSystemLoader
 from util.RequestHandler import AuthAwareRequestHandler
 from model.post import Post
 from model.comment import Comment
 from util.auth import validate_user_cookie
-from jinja2 import Environment, FileSystemLoader
+import util.auth_decorators as check
+from util.jinja_filters import *
 
 template_dir = os.path.join(os.path.dirname(__file__), '../template')
 jinja_env = Environment(loader=FileSystemLoader(template_dir), autoescape=True)
-
-
-def post_age_formatter(creation_timestamp):
-    """
-    Format a datetime object as YYYY-MM-DD
-
-    Args:
-        creation_timestamp: A datetime object
-
-    Returns:
-        A string representation of the datetime object having the form
-        YYYY-MM-DD
-    """
-    return creation_timestamp.date().isoformat()
-
-
-def trim_to_two_sentences(post):
-    """
-    Trim a multi-sentence string to the first three sentences and append an
-    ellipsis. A sentence is considered to terminate with a period ('.').
-
-    If a string is fewer than three sentences, the entire string will be
-    returned (i.e. without an ellipsis)
-    """
-    trimmed_post = post.split(".")[:3]
-    if len(trimmed_post) >= 3:
-        return '. '.join(trimmed_post) + "..."
-    else:
-        return post
-
 jinja_env.filters['post_age'] = post_age_formatter
 jinja_env.filters['trim'] = trim_to_two_sentences
-
-
-def user_is_author(fn):
-    """
-    Decorator function that only proceeds with formulating a response to a
-    request in the case where the 'user' cookie is present, valid, and
-    corresponds to the author of this post
-
-    Args:
-        fn: The function to wrap. Usually a RequestHandler method
-
-    Returns:
-        A decorator function that proceeds with the request if the 'user'
-        cookie is valid, or redirects to /posts/post-id otherwise.
-    """
-
-    def redirect_if_not_author(*args, **kwargs):
-        self = args[0]
-        user_id = kwargs['user_id']
-        post_id = kwargs['post_id']
-        post = Post().get_by_id(int(post_id))
-
-        if post.submitter == user_id:
-            # Call the decorated function
-            fn(*args, **kwargs)
-        else:
-            self.redirect('/posts/' + kwargs['post_id'])
-
-    return redirect_if_not_author
-
-
-def user_is_not_author(fn):
-    """
-    Decorator function that only proceeds with formulating a response to a
-    request in any case where the case where the 'user' cookie is present,
-    valid, and does not correspond to the author of this post
-
-    Args:
-        fn: The function to wrap. Usually a RequestHandler method
-
-    Returns:
-        A decorator function that proceeds with the request if the 'user'
-        is not a post author, or redirects to /posts/post-id otherwise.
-
-    """
-
-    def redirect_if_author(*args, **kwargs):
-        self = args[0]
-        user_id = kwargs['user_id']
-        post_id = kwargs['post_id']
-        post = Post().get_by_id(int(post_id))
-
-        if post.submitter != user_id:
-            fn(*args, **kwargs)
-        else:
-            self.redirect('/posts/' + kwargs['post_id'])
-
-    return redirect_if_author
-
-
-def user_is_signed_in(fn):
-    """
-    Decorator function that only proceeds with formulating a response to a
-    request in the case where the 'user' cookie is present and valid
-
-    Args:
-        fn: The function to wrap. Usually a RequestHandler method
-
-    Returns:
-        A decorator function that proceeds with the request if the 'user'
-        cookie is valid, or redirects to /users/in otherwise
-    """
-
-    def redirect_if_not_signed_in(*args, **kwargs):
-        self = args[0]
-        cookie = self.request.cookies.get('user')
-        if validate_user_cookie(cookie):
-            kwargs['user_id'] = self.request.cookies.get('user').split("|")[0]
-            fn(self, **kwargs)
-        else:
-            self.redirect('/users/in')
-
-    return redirect_if_not_signed_in
-
-
-def post_exists(fn):
-    """
-    Decorator function that only proceeds with formulating a response to a
-    request in the case where a Post with a given post_id actually exists.
-
-    If a Post does not exist, the application will trigger a 404 response.
-
-    """
-    def error_if_post_does_not_exist(*args, **kwargs):
-        self = args[0]
-        post_id = kwargs['post_id']
-        post = Post.get_by_id(int(post_id))
-
-        if post:
-            fn(self, **kwargs)
-        else:
-            self.abort(404)
-
-    return error_if_post_does_not_exist
 
 
 def user_has_liked_post(user_id, post_id):
@@ -189,7 +57,7 @@ class NewPostFormHandler(AuthAwareRequestHandler):
     for creating new blog posts, including with form validation hints
     """
 
-    @user_is_signed_in
+    @check.user_is_signed_in
     def get(self, **kwargs):
         self.write(jinja_env.get_template('new-post.html'),
                    {'form': {'title': '', 'content': '', 'error': False},
@@ -208,7 +76,7 @@ class PostsHandler(AuthAwareRequestHandler):
     title and content of a post)
     """
 
-    @user_is_signed_in
+    @check.user_is_signed_in
     def post(self, **kwargs):
         title = self.request.POST['title']
         content = self.request.POST['content']
@@ -240,7 +108,7 @@ class PostHandler(AuthAwareRequestHandler):
     to present
     """
 
-    @post_exists
+    @check.post_exists
     def get(self, **kwargs):
         template = jinja_env.get_template('post.html')
         post_id = kwargs['post_id']
@@ -261,8 +129,8 @@ class PostHandler(AuthAwareRequestHandler):
 
         # If this post exists, render it (otherwise, 404)
         self.write(template, {'post': post, 'comments': comments,
-                                  'current_user': user,
-                                  'has_liked': has_liked})
+                              'current_user': user,
+                              'has_liked': has_liked})
 
 
 class UpdateHandler(AuthAwareRequestHandler):
@@ -282,9 +150,9 @@ class UpdateHandler(AuthAwareRequestHandler):
     the post to update.
     """
 
-    @post_exists
-    @user_is_signed_in
-    @user_is_author
+    @check.post_exists
+    @check.user_is_signed_in
+    @check.user_is_post_author
     def get(self, **kwargs):
         template = jinja_env.get_template('new-post.html')
         post = Post().get_by_id(int(kwargs['post_id']))
@@ -294,9 +162,9 @@ class UpdateHandler(AuthAwareRequestHandler):
                               'post_id': kwargs['post_id']
                               })
 
-    @post_exists
-    @user_is_signed_in
-    @user_is_author
+    @check.post_exists
+    @check.user_is_signed_in
+    @check.user_is_post_author
     def post(self, **kwargs):
         post_id = kwargs['post_id']
         title = self.request.POST['title']
@@ -330,9 +198,9 @@ class DeleteHandler(webapp2.RequestHandler):
     delete
     """
 
-    @post_exists
-    @user_is_signed_in
-    @user_is_author
+    @check.post_exists
+    @check.user_is_signed_in
+    @check.user_is_post_author
     def get(self, **kwargs):
         post_id = kwargs['post_id']
         Post.get_by_id(int(post_id)).key.delete()
@@ -355,8 +223,8 @@ class LikeHandler(webapp2.RequestHandler):
     the post that has been liked, and the user that liked it
     """
 
-    @user_is_signed_in
-    @user_is_not_author
+    @check.user_is_signed_in
+    @check.user_is_not_post_author
     def get(self, **kwargs):
 
         post = Post.get_by_id(int(kwargs['post_id']))
