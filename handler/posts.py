@@ -125,6 +125,27 @@ def user_is_signed_in(fn):
     return redirect_if_not_signed_in
 
 
+def post_exists(fn):
+    """
+    Decorator function that only proceeds with formulating a response to a
+    request in the case where a Post with a given post_id actually exists.
+
+    If a Post does not exist, the application will trigger a 404 response.
+
+    """
+    def error_if_post_does_not_exist(*args, **kwargs):
+        self = args[0]
+        post_id = kwargs['post_id']
+        post = Post.get_by_id(int(post_id))
+
+        if post:
+            fn(self, **kwargs)
+        else:
+            self.abort(404)
+
+    return error_if_post_does_not_exist
+
+
 def user_has_liked_post(user_id, post_id):
     """
     Indicates whether a user has already liked a given post
@@ -219,6 +240,7 @@ class PostHandler(AuthAwareRequestHandler):
     to present
     """
 
+    @post_exists
     def get(self, **kwargs):
         template = jinja_env.get_template('post.html')
         post_id = kwargs['post_id']
@@ -238,12 +260,9 @@ class PostHandler(AuthAwareRequestHandler):
             has_liked = user_has_liked_post(user, post_id)
 
         # If this post exists, render it (otherwise, 404)
-        if post:
-            self.write(template, {'post': post, 'comments': comments,
+        self.write(template, {'post': post, 'comments': comments,
                                   'current_user': user,
                                   'has_liked': has_liked})
-        else:
-            webapp2.abort(404)
 
 
 class UpdateHandler(AuthAwareRequestHandler):
@@ -263,6 +282,7 @@ class UpdateHandler(AuthAwareRequestHandler):
     the post to update.
     """
 
+    @post_exists
     @user_is_signed_in
     @user_is_author
     def get(self, **kwargs):
@@ -274,6 +294,7 @@ class UpdateHandler(AuthAwareRequestHandler):
                               'post_id': kwargs['post_id']
                               })
 
+    @post_exists
     @user_is_signed_in
     @user_is_author
     def post(self, **kwargs):
@@ -309,6 +330,7 @@ class DeleteHandler(webapp2.RequestHandler):
     delete
     """
 
+    @post_exists
     @user_is_signed_in
     @user_is_author
     def get(self, **kwargs):
