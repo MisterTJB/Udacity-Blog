@@ -223,6 +223,7 @@ class LikeHandler(webapp2.RequestHandler):
     the post that has been liked, and the user that liked it
     """
 
+    @check.post_exists
     @check.user_is_signed_in
     @check.user_is_not_post_author
     def get(self, **kwargs):
