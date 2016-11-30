@@ -15,10 +15,10 @@ Running the project locally requires the [Google App Engine SDK for Python](http
 
 Assuming that the SDK is installed, the project can be run by:
 
-1. Downloading this project to a local machine
+1. Downloading or cloning this project to your local machine
 2. Navigating to the project directory in the terminal. E.g. `cd /path/to/Udacity-Blog`
-3. Running `dev_appserver.py .`
-4. The site should now be available at localhost:8080
+3. Running `dev_appserver.py .` from the terminal
+4. The site should now be available at [http://localhost:8080](http://localhost:8080) in your web browser
 
 # Functionality and Usage
 
